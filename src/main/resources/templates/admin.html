@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Admin Panel</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .admin-panel { background: #e9ecef; padding: 20px; border-radius: 5px; }
+        .user-info { background: white; padding: 15px; margin: 10px 0; border-radius: 3px; }
+        .logout-btn {
+            background: #dc3545; color: white; padding: 10px 20px;
+            text-decoration: none; border-radius: 3px; display: inline-block;
+            margin-top: 20px;
+        }
+        .nav-links a { margin-right: 15px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Admin Panel</h1>
+
+    <div class="admin-panel">
+        <h2>Welcome, <span sec:authentication="name">Admin</span>!</h2>
+
+        <div class="user-info">
+            <h3>Your Information:</h3>
+            <p><strong>Username:</strong> <span sec:authentication="name">admin</span></p>
+            <p><strong>Roles:</strong> <span sec:authentication="principal.authorities">[ROLE_ADMIN, ROLE_USER]</span></p>
+        </div>
+
+        <div class="nav-links">
+            <a href="/user">Go to User Page</a>
+        </div>
+
+        <h3>User Management</h3>
+        <p>Here you can manage all users (CRUD operations):</p>
+        <ul>
+            <li>Create new users</li>
+            <li>View all users</li>
+            <li>Edit user information</li>
+            <li>Delete users</li>
+        </ul>
+
+        <p><em>Note: This is a demo. CRUD functionality will be implemented later.</em></p>
+    </div>
+
+    <!-- Форма выхода -->
+    <form th:action="@{/logout}" method="post" style="display: inline;">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
+</body>
+</html>
