@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users Management</title>
+</head>
+<body>
+<h1>Users Management</h1>
+
+<!-- Форма добавления пользователя -->
+<h2>Add New User</h2>
+<form th:action="@{/user/add}" th:object="${user}" method="post">
+    <div>
+        <label>Name:</label>
+        <input type="text" th:field="*{username}" required>
+        <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+    </div>
+
+    <div>
+        <label>Password:</label>
+        <input type="text" th:field="*{password}" required>
+        <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    </div>
+
+    <input type="submit" value="Add User">
+</form>
+
+<hr>
+
+<!-- Список пользователей -->
+<h2>All Users</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>USERNAME</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">ID</td>
+        <td th:text="${user.username}">username</td>
+        <td>
+            <a th:href="@{/user/edit/{id}(id=${user.id})}">Edit</a> |
+            <form th:action="@{/user/delete/{id}(id=${user.id})}" method="post" style="display:inline;">
+                <button type="submit" onclick="return confirm('Delete this user?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${#lists.isEmpty(users)}">
+    <p>No users found</p>
+</div>
+</body>
+</html>
