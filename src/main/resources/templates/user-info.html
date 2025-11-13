@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>User Information</title>
+    <meta charset="utf-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .user-info {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .info-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #e9ecef;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+            display: inline-block;
+            width: 120px;
+        }
+        .info-value {
+            color: #212529;
+        }
+        .logout-btn, .back-btn {
+            background: #dc3545;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+        .back-btn {
+            background: #6c757d;
+            text-decoration: none;
+        }
+        .header {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 15px;
+        }
+        .roles-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .roles-list li {
+            background: #e9ecef;
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>👤 User Information</h1>
+        <p>Detailed information about your account</p>
+    </div>
+
+    <div class="user-info">
+        <h2>Welcome, <span style="color: #007bff;" th:text="${user.username}">User</span>!</h2>
+
+        <div class="info-item">
+            <span class="info-label">User ID:</span>
+            <span class="info-value" th:text="${user.id}">ID</span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">Username:</span>
+            <span class="info-value" th:text="${user.username}">username</span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span class="info-value" th:text="${user.email}">email@example.com</span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">Roles:</span>
+            <span class="info-value">
+                <ul class="roles-list">
+                    <li th:each="role : ${user.roles}" th:text="${role.name}">ROLE_USER</li>
+                </ul>
+            </span>
+        </div>
+
+        <div class="info-item">
+            <span class="info-label">Account Status:</span>
+            <span class="info-value" style="color: #28a745;">✅ Active</span>
+        </div>
+
+        <!-- Показываем ссылку на админ панель только для админов -->
+        <div sec:authorize="hasRole('ADMIN')" class="info-item">
+            <span class="info-label">Admin Access:</span>
+            <span class="info-value">
+                <a href="/admin" style="color: #dc3545;">⚙️ Go to Admin Panel</a>
+            </span>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="/user" class="back-btn">← Back to User Page</a>
+
+        <!-- Форма выхода -->
+        <form th:action="@{/logout}" method="post" style="display: inline;">
+            <button type="submit" class="logout-btn">🚪 Logout</button>
+        </form>
+    </div>
+
+    <div style="margin-top: 30px; padding: 15px; background: #e7f3ff; border-radius: 5px; text-align: center;">
+        <p style="margin: 0; color: #0056b3;">
+            <strong>Last login:</strong>
+            <span th:text="${#temporals.format(#temporals.createNow(), 'dd.MM.yyyy HH:mm')}">today</span>
+        </p>
+    </div>
+</div>
+</body>
+</html>

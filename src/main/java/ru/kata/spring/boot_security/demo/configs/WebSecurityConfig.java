@@ -7,35 +7,34 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.servicec.UserService;
+import ru.kata.spring.boot_security.demo.servicec.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
-    private final UserService userDetailsService;
-    private final PasswordEncoder passwordEncoder; // ← ДОБАВИТЬ
+    private final UserDetailsServiceImpl userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    // Обновить конструктор
     public WebSecurityConfig(SuccessUserHandler successUserHandler,
-                             UserService userDetailsService,
-                             PasswordEncoder passwordEncoder) { // ← ДОБАВИТЬ
+                             UserDetailsServiceImpl userDetailsService,
+                             PasswordEncoder passwordEncoder) {
         this.successUserHandler = successUserHandler;
         this.userDetailsService = userDetailsService;
-        this.passwordEncoder = passwordEncoder; // ← ДОБАВИТЬ
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/login").permitAll()
+                .antMatchers("/", "/login", "/error").permitAll() // Разрешаем доступ к login странице
                 .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
+                .loginPage("/login") // Указываем кастомную страницу логина
                 .successHandler(successUserHandler)
                 .permitAll()
                 .and()
@@ -46,6 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder); // ← ИСПОЛЬЗОВАТЬ поле
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 }

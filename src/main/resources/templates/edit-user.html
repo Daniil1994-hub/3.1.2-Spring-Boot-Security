@@ -7,7 +7,7 @@
 <body>
 <h1>Edit User</h1>
 
-<form th:action="@{/user/update/{id}(id=${user.id})}" th:object="${user}" method="post">
+<form th:action="@{/admin/user/update/{id}(id=${user.id})}" th:object="${user}" method="post">
     <div>
         <label>Name:</label>
         <input type="text" th:field="*{username}" required>
@@ -17,6 +17,18 @@
         <label>Password:</label>
         <input type="text" th:field="*{password}" required>
         <span th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+    </div>
+    <div>
+        <label>Email:</label>
+        <input type="email" th:field="*{email}" required>
+        <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></span>
+    </div>
+    <div>
+        <label>Roles:</label>
+        <div th:each="role : ${roles}">
+            <input type="checkbox" th:value="${role.id}" name="roleIds" th:id="'role_' + ${role.id}">
+            <label th:for="'role_' + ${role.id}" th:text="${role.name}">Role</label>
+        </div>
     </div>
 
     <input type="submit" value="Update User">
